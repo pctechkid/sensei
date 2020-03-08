@@ -10,7 +10,7 @@ function init() {
 	document.siteName = $('title').html();
 	$('body').addClass("mdui-theme-primary-blue-grey mdui-theme-accent-blue");
 	var html = `
-    <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names.." title="Type in a name">
+    <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search" title="Type in a name">
 <header class="mdui-appbar mdui-color-theme"> 
    <div id="nav" class="mdui-toolbar mdui-container">
    </div> 
@@ -36,7 +36,7 @@ function render(path) {
 // Rendering title
 function title(path) {
 	path = decodeURI(path);
-	$('title').html(document.siteName + ' - ' + path);
+	$('title').html(document.siteName);
 }
 // Render navigation bar
 function nav(path) {
@@ -52,20 +52,10 @@ function nav(path) {
 			if (n == '') {
 				break;
 			}
-			html += `<i class="mdui-icon material-icons mdui-icon-dark folder" style="margin:0;">chevron_right</i><a class="folder" href="${p}">${n}</a>`;
+			
 		}
 	}
-	html += `<div class="mdui-toolbar-spacer"></div>
-    <a href="https://github.com/kulokenci/goindex-drive" target="_blank" class="mdui-btn mdui-btn-icon mdui-ripple mdui-ripple-white" mdui-tooltip="{content: 'GoIndex on Github'}">
-      <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 36 36" enable-background="new 0 0 36 36" xml:space="preserve" class="mdui-icon" style="width: 24px;height:24px;">
-        <path fill-rule="evenodd" clip-rule="evenodd" fill="#ffffff" d="M18,1.4C9,1.4,1.7,8.7,1.7,17.7c0,7.2,4.7,13.3,11.1,15.5
-	c0.8,0.1,1.1-0.4,1.1-0.8c0-0.4,0-1.4,0-2.8c-4.5,1-5.5-2.2-5.5-2.2c-0.7-1.9-1.8-2.4-1.8-2.4c-1.5-1,0.1-1,0.1-1
-	c1.6,0.1,2.5,1.7,2.5,1.7c1.5,2.5,3.8,1.8,4.7,1.4c0.1-1.1,0.6-1.8,1-2.2c-3.6-0.4-7.4-1.8-7.4-8.1c0-1.8,0.6-3.2,1.7-4.4
-	c-0.2-0.4-0.7-2.1,0.2-4.3c0,0,1.4-0.4,4.5,1.7c1.3-0.4,2.7-0.5,4.1-0.5c1.4,0,2.8,0.2,4.1,0.5c3.1-2.1,4.5-1.7,4.5-1.7
-	c0.9,2.2,0.3,3.9,0.2,4.3c1,1.1,1.7,2.6,1.7,4.4c0,6.3-3.8,7.6-7.4,8c0.6,0.5,1.1,1.5,1.1,3c0,2.2,0,3.9,0,4.5
-	c0,0.4,0.3,0.9,1.1,0.8c6.5-2.2,11.1-8.3,11.1-15.5C34.3,8.7,27,1.4,18,1.4z"></path>
-      </svg>
-    </a>`;
+
 	$('#nav').html(html);
 }
 // Render file list
@@ -149,7 +139,7 @@ function list_files(path, files) {
 				});
 			}
 			var ext = p.split('.').pop();
-			if ("|html|php|css|go|java|js|json|txt|sh|md|mp4|bmp|jpg|jpeg|png|gif|".indexOf(`|${ext}|`) >= 0) {
+			if ("|html|php|css|go|java|js|json|txt|sh|md|bmp|jpg|jpeg|png|gif|".indexOf(`|${ext}|`) >= 0) {
 				p += "?a=view";
 				c += " view";
 			}
@@ -180,19 +170,7 @@ function get_file(path, file, callback) {
 	}
 }
 // Document display ?a=view
-function file(path) {
-	var name = path.split('/').pop();
-	var ext = name.split('.').pop().toLowerCase().replace(`?a=view`, "");
-	if ("|html|php|css|go|java|js|json|txt|sh|md|".indexOf(`|${ext}|`) >= 0) {
-		return file_code(path);
-	}
-	if ("|mp4|".indexOf(`|${ext}|`) >= 0) {
-		return file_video(path);
-	}
-	if ("|bmp|jpg|jpeg|png|gif|".indexOf(`|${ext}|`) >= 0) {
-		return file_image(path);
-	}
-}
+
 // Document display |html|php|css|go|java|js|json|txt|sh|md|
 function file_code(path) {
 	var type = {
@@ -244,29 +222,7 @@ function file_code(path) {
 	});
 }
 // Document display mp4
-function file_video(path) {
-	var url = window.location.origin + path;
-	var content = `
-<div class="mdui-container-fluid">
-	<br>
-	<video class="mdui-video-fluid mdui-center" preload controls>
-	  <source src="${url}" type="video/mp4">
-	</video>
-	<br>
-	<!-- Fixed label -->
-	<div class="mdui-textfield">
-	  <label class="mdui-textfield-label">Download Link</label>
-	  <input class="mdui-textfield-input" type="text" value="${url}"/>
-	</div>
-	<div class="mdui-textfield">
-	  <label class="mdui-textfield-label">Reference address</label>
-	  <textarea class="mdui-textfield-input"><video><source src="${url}" type="video/mp4"></video></textarea>
-	</div>
-</div>
-<a href="${url}" class="mdui-fab mdui-fab-fixed mdui-ripple mdui-color-theme-accent"><i class="mdui-icon material-icons">file_download</i></a>
-	`;
-	$('#content').html(content);
-}
+
 //
 function file_image(path) {
 	var url = window.location.origin + path;
